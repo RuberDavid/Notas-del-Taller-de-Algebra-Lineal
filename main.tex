@@ -1,0 +1,487 @@
+\documentclass[14pt]{extarticle} % esta clase de artículo vive en el paquete extsizes
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[spanish]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2.5cm,left=1.5cm,right=4.5cm,marginparwidth=2cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{bm} % esto es para usar las negritas en modo matemático
+\usepackage{color}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{amsfonts} % con este poneme la K bonita
+\usepackage{amssymb} 
+\usepackage{amsthm} % contiene el ambiente proof y \theoremstyle, se usa para crear el estilo para los problemas
+\usepackage{todonotes}
+\usepackage{tcolorbox} % est es para las cajitas de texto
+\newcommand{\forceindent}{\leavevmode{\parindent=1em\indent}} % https://tex.stackexchange.com/questions/102521/indenting-a-single-paragraph-in-a-document-of-no-indentation
+
+\newtheorem{definicion}{Definición}
+\newtheorem{teorema}{Teorema}
+\newtheorem{lema}{Lema}
+
+\newtheoremstyle{problemastyle}  % <name>
+        {5pt}                                               % <space above>
+        {5pt}                                               % <space below>
+        {\normalfont}                               % <body font>
+        {5pt}                                                  % <indent amount}
+        {\color{orange}\bfseries}                 % <theorem head font>
+        {\normalfont\bfseries:}         % <punctuation after theorem head>
+        {.5em}                                          % <space after theorem head>
+        {}                                                  % <theorem head spec (can be left empty, meaning `normal')>
+\theoremstyle{problemastyle} %https://tex.stackexchange.com/questions/145549/beginproblem-analogue-to-beginproof
+\newtheorem{problema}{Problema}
+
+\newcommand{\kampo}{\mathbb{K}}
+\newcommand{\kev}{$\kampo$-espacio vectorial}
+\newcommand{\cero}{\mathfrak{o}} %TODO : que esto se vea mejor
+\usepackage{graphicx}
+\newcommand{\minus}{\scalebox{0.75}[1.0]{$-$}} % no me gusta que el menos de inv.ad sea tan largo
+\newcommand{\evV}{\mathbb{V}} % espcio vectorial V
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\generado}[1]{\langle #1 \rangle}
+\newcommand{\implica}{\Rightarrow}
+
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\id}{Id}
+\DeclareMathOperator{\cod}{Cod}
+
+\title{Cuaderno del Taller de Álgebra Lineal(Borrador)}
+\author{Oscar David Domínguez Dávila \\
+        Alexia \\
+        Demis \\
+        Ricardo \\
+        }
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Estas notas intentan documentar y estructurar el trabajo durante las sesiones del taller de álgebra lineal dirigido por el profesor Ricardo Guzman Fuentes. Como tal, no hay una estructura \textit{lineal} en estas, pues a veces era lo más natural dar saltos a temas anteriores, más avanzados o en nuevas direcciones, muy probablemente haya omisiones, pues el objetivo del taller es profundizar y recordar.\\ Casi todas las demostraciones fueron ideadas por los participantes del taller, en diversas ocasiones con ayuda del profe Ricardo.\\
+\textbf{Nota:} por el momento, muchas demostraciones no se han transcrito.
+\end{abstract}
+
+\section{Espacios Vectoriales}
+
+\begin{definicion}[$\kampo$-espacio Vectorial]
+     Sea $\kampo$ un campo y sea $V$ un conjunto no vacío de vectores,  y sean\\
+     $ + : V \times V \rightarrow V$,\\
+     $ \cdot : V  \times V \rightarrow V $ dos operaciones tales que, si $u,v,w \in V$ y $a,b,c \in \kampo$
+    
+     \begin{enumerate}
+         \item $u+v=v+u$
+         \item $u+(v+w)=(u+v)+w$
+         \item $\exists \cero \in \evV : u + \cero = u$
+         \item $\exists \minus u\in \evV : u + ( \minus u) = \cero$
+         \item $1u =u$
+         \item $(ab)u = a(bu)$
+         \item $c(u+v)=cu+cv$
+         \item $(a+b)u=au+ab$
+     \end{enumerate}
+    Diremos que $\evV  = (V,+,\cdot)$ es un \textbf{$\kampo$-espacio vectorial}.
+    Usualmente denotaremos a un  \kev \; por $\evV$ y no distinguiremos  a la 3-tupla $\evV= (V,+,\cdot )$ y $V$.
+    
+\end{definicion}
+
+\begin{tcolorbox}
+Algunos ejemplos de espacios vectoriales son:
+    \begin{enumerate}
+        \item $\bb{R}^n$ es un $\bb R $-espacio vectorial con la suma y producto usual "entrada por entrada".
+        \item $\bb Z_p^n$ es un $\bb Z_p$-espacio vectorial con la suma y producto módulo $p$.
+        \item Sea $\mathbf{C}$ el conjunto de todos los conjuntos convexos en $\bb R^2$, i.e.
+        $$\mathbf{C} = \{ A \subset \bb R ^2 |  \forall a,b \in A, \text{ el segmento de recta } \overline{a,b} \in A\}$$
+        la suma de Minkowsky $A\oplus B := {a+b| a\in A, b\in B}$ y el producto por un escalar $k\odot A := \{ ka | \forall a \in  A\}$. \\
+        $(\mathbf{C}, \oplus, \odot) $ es un $\bb R$-espacio vectorial.
+        \item Las soluciones a una ecuación diferencial lineal homogénea forman un $\bb R$-espacio vectorial. \todo{elavorar}
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{definicion}[Sub-espacio vectorial]
+    Sea $\evV$ un espacio vectorial, si $S\neq \varnothing $, $S\subset \evV$ entonces $S$ es un subespacio de $\evV$ si:
+    \begin{enumerate}
+        \item $u,v \in S \Rightarrow s+v \in S $
+        \item $a \in \kampo , w \in S \Rightarrow aw \in S $
+        
+    \end{enumerate}
+    
+    donde la suma y el producto por escalar son los mismo que en $\evV$.
+\end{definicion}
+
+\begin{teorema}
+    Si $S$ es subespacio de $\evV$, entonces $S$ es un $K$-espacio vectorial.
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+\subsection{Bases}
+
+\begin{definicion}[Combinación lineal]
+    Una combinación lineal de elementos de $A \subset \evV$ es un vector de la forma
+    $$ \sum_{i=1}^k \alpha_i v_i = \alpha_1 v_1 + \alpha_2 v_2 + \alpha_3 v_3 + \dotsb + \alpha_n v_k$$
+    Donde $v_1,...,v_k\in A \subset \evV$ y $\alpha_1,...,\alpha_k\in \kampo$
+\end{definicion}
+Notece que las combinaciones lineales son sumas \textbf{finitas}, incluso cuando hablemos de espacios vectoriales de dimensión infinita, puede ser tentador extender la definición a series infinitas con una cantidad infinita de coeficiente no nulos, i.e. del tipo $\sum_{i=1}^\infty \alpha_i v_i$, pero esto requiere considerar el concepto de convergencia. Parece ser que los 
+\footnote{
+\href{https://en.wikipedia.org/wiki/Topological_vector_space}{espacios vectoriales topológicos} estudian espacios donde se puede trabajar con series convergentes.
+}
+
+\begin{definicion}[Generado]
+    Si $S \subset \evV $, $\generado{S}$ es el conjunto de todas las combinaciones lineales de elementos de $S$, i.e.
+    $$ \generado{S}= \{ v \in \evV  | v = \sum_{i=1}^k \alpha_i v_i \text{ ,donde } \alpha_i \text{, } \in v_i \in S \text{ 
+ y } i \in 1,..., k \; \forall k in \bb{N}\} $$
+\end{definicion}
+
+\begin{teorema}
+\label{generado es e.v.}
+    $\generado{S}$es un $\kampo$-espacio vectorial.
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+\begin{definicion}[Dependencia lineal]
+    Sea  $W \subset \evV$ diremos que W es linealmente dependiente si podemos expresar todo elemento de $W$ como una combinación lineal de elementos de $W$.
+\end{definicion}
+
+\begin{definicion}[Independencia lineal]
+    Si $W \subset \evV$ diremos que $W$ es linealmente independiente si no es linealmente dependiente.
+\end{definicion}
+
+\begin{teorema}
+    $v_1,v_2,v_3,\ldots,v_n$ son linealmente independientes sí y sólo sí, no existen $a_1,a_2,a_3,\ldots,a_n \in \kampo$ tales que:
+    $$ \sum_{i=1}^{n} a_i v_i = 0$$
+\end{teorema}
+\begin{proof}
+    
+\end{proof}
+
+\begin{definicion}[Base]
+    Una base $B$ de un espacio vectorial $\evV$ es un conjunto l.i. que genera a $E$, i.e.:
+    $$\langle B \rangle = E$$
+\end{definicion}
+
+\begin{definicion}[Dimensión ]
+    Si $B$ es base de $E$, $dim E = |B|$ es la dimensión de $E$ si $|B|=n\in \mathbb{N}$, si $B$ tiene cardinalidad infinita, entonces $dim E = \infty$
+\end{definicion}
+
+La siguente versión de la definición de base nos permite trabajar con espacios vectoriales de dimensión infinita, como por ejemploe $\mathbb{R}$ en $\mathbb{Q}$
+\begin{definicion}[Base v.2]
+   Una base de un e.v. $E$ es un conjunto linealmente independiente maximál.
+\end{definicion}
+
+\begin{definicion}[dimensión v.2]
+    Si $B$ es una base v.2 de $E$ , entonces $dim E = |B|$
+\end{definicion}
+
+\begin{teorema}[Existencia de bases]
+\label{existencia de bases}
+    Todo espacio vectorial tiene una base v.2!!! ( Tarea de Oscar )
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+\begin{problema}[Guía nivel superior del concurso Pierre de de Fermat 2022]
+    ¿Es $(\bb R, +, \cdot)$ un $\bb Q$-espacio vectorial si $+$ y el producto por un escalar $\cdot$ son respectivamente la suma y producto usual en $\bb R$ ?
+    \begin{enumerate}
+        \item Demostrar que el conjunto $\{1,r\} \subset \bb R$ es linealmente independiente en $\bb R$ si y sólo sí $r$ es irracional.
+        \item ¿Cuál es $dim_{\bb Q}(\bb R)$.
+        \item De una base.
+    \end{enumerate}
+\end{problema}
+
+
+Si $\evV$ es un \kev y $S\subset \evV$ y $$\bm{B}(S) := \{W\subset \evV | W\text{ es subespacio de } \evV \text{ y } S \subset W\}$$
+$$[S] := \bigcap_{W\in B(S)} W $$
+¿Es $[S]$ subespacio vectorial de $V$?
+\begin{proof}
+
+En primer lugar, ¿puede ser $[S]$ vació?.\\
+Notemos que $\evV \in \bm{B}(S)$ por lo que $\bm{B}$ no es vacío.
+Además, $\cero \in W$ para todo $W$ s.v.  por lo tanto $\cero \in [S]$ y no es vacío.
+
+    \begin{enumerate}
+        \item Si $u,v \in [S] \Rightarrow u+w\in [S] $\\
+        En efecto, como $u,v \in [S]$ entonces $\forall W \in $$\bm B(S) u,w \in W \Rightarrow u+w \in W$ porque W es e.v.\\
+            \forceindent por L.G.U. $u+w$ está en todo $W \in $ $\bm B(S)\Rightarrow u+w \in [S]$ por definición de intersección.
+        \item Si $\alpha \in \kampo, v \in [S] \Rightarrow \alpha v \in [S]$\\
+        En efecto, 
+    \end{enumerate} 
+\end{proof}
+
+\begin{enumerate}
+    \item Si $S=\varnothing$ ¿Quién es [S]?
+    
+    \item Si $\evV = \bb R^2$ y $S=\{e_1\}$ ¿ quién es $[S]$?
+    
+    \item Para $\bb C^2 , S=\{e_1\}$ ¿Quién es $[S]$?
+    
+    \item ¿ Puede pasar que $S=[S]$ ?
+    
+    \item Si $S\neq \varnothing $ ¿$[S]=\{\sum_{i=1}^n \alpha_iv_i\;|\; \alpha_i \in \kampo \land v_i \in S \land i\in\{1,\ldots,n \}$?
+
+    Esto es, si $S\neq \varnothing$, ¿$[S]=\langle S\rangle$? 
+    \begin{enumerate}
+        \item $[S] \subset \langle S \rangle $.
+
+        Como $\langle S \rangle$ es subespacio vectorial de $\evV$ por \ref{generado es e.v.} y $S \in \langle S \rangle $, podemos afirmar que $\langle S \rangle \in \bm B(S)$.\\
+        Como $[S]$ es la intersección de elementos de $\bm B(S)$ entonces $x \in [S] \implica x \in \generado S$, i.e. $[S] \subset \generado S$.
+        \item $[S] \supset \generado S $.
+
+        \todo{}
+    \end{enumerate}
+\end{enumerate}
+
+\begin{teorema}
+    $S\neq  \varnothing \implica \generado{S} = [S]$
+\end{teorema}
+
+\begin{teorema}
+    Su $W$ es s.v. de $V$ y $\dim V = n$, entonces $\dim W \leq n$
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+¿ es verdad que si $U$ es subespacio de $\evV$ con $U \cap S \neq \varnothing$ implica que $[S] \subset U$?
+
+\subsection{Suma de subespacios}
+
+\begin{definicion}[Suma de subespacios]
+    Sean $U$ y $W$ subespacios vectoriales de $\evV$, entonces se define el espacio suma de $U$ y $V$ como
+    $$U+V:=\{u+w\;|\;u\in U \land w \in W \}$$
+    
+\end{definicion}
+
+
+
+\begin{teorema}[La suma de subespacios es un s.v.]
+    Si $\evV$ es un \kev y $U,W \subset \evV$ subespacios vectoriales de $\evV$, entonces $U+V$ es un subespacio vectorial de $\evV$
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+\begin{teorema}
+    $[U \cup W] = U+W$
+\end{teorema}
+\begin{proof}
+     \todo{}
+\end{proof}
+\begin{teorema}
+\label{dim sum e.v.}
+Si $U$ y $V$ son e.v. de dimensión finita, entonces
+        $$\dim U+V=\dim U + \dim W - \dim U\cap W$$
+\end{teorema}
+
+\begin{definicion}[Suma directa]
+$U+V$ se llama suma directa si cada elemento en $U+W$ tiene \textbf{expresión única}. Es decir si $u_1,u_2 \in U$,$w_1,w_2\in W$ tales que $u_1+w_1 = u_2 +w_2$ implica que $u_1=u_2$ y $w_1=w_2$. Si $U+W$ es suma directa la denotamos como $U\oplus W$
+\end{definicion}
+
+\begin{teorema}
+\label{sumdir sii cap cero}
+    Si $U,W \subset \evV$
+    $$U \oplus W \leftrightarrow U \cap W = \{\cero\}$$
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+\begin{problema}[Tarea]
+    Un conjunto $S\subset \evV$ es linealmente independiente sí y sólo si $\forall C \subset S$ finito, $B$ es linealmente independiente.
+\end{problema}
+
+\begin{teorema}
+    Si $U \oplus W$, $\dim U < \infty$ y  $\dim W < \infty$, entonces
+    $$\dim U \oplus W = \dim U + \dim W$$
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+\textcolor{orange}{Hasta aquí llega el segundo Jamboard}
+
+\subsection{Producto de espacios vectoriales}
+\begin{problema}
+    Si $U$ es s.v. de $V \times W$
+    \begin{enumerate}
+        \item ¿Existe $T:V \longrightarrow W $ con $\text{Graf}(T)=U$?
+        \item Si $T:V \longrightarrow W $ ¿$\text{Graf}(T)$ es s.v. de $V\times W$?
+    \end{enumerate}
+\end{problema}
+
+\begin{teorema}
+    Si $T:V\longrightarrow W$ lineal, entonces $T(\cero_V)=\cero_W$
+\end{teorema}
+\begin{proof}
+    \todo{}
+\end{proof}
+
+\subsection{Kernel e Imagen}
+\begin{definicion}[Kernel de una transformación]
+
+\end{definicion}
+\begin{teorema}[Teorema de rango-nulidad]
+\label{rango-nulidad}
+    Si $\evV$ es de dimensión finita y $T: \evV \longrightarrow W$ una transformación lineal
+    $$\dim V = \dim \ker T + \dim  \im T$$
+\end{teorema}
+
+
+\subsection{Sucesiones}
+
+Sean $U$ y $W$ subespacios del $K$-espacio vectorial $\evV$, tales que $U \oplus W = \evV$. Definiendo 
+\begin{align*}
+\rho : U \oplus W & \longrightarrow \evV\\
+u\oplus w & \longmapsto w
+\end{align*} 
+Probar: 
+\todo{}
+\begin{enumerate}
+    \item $\rho$ es lineal
+    \item $\rho$ es inyectiva ( use $A \oplus B$ sii $A \cap B = \{ \cero \}$)
+    \item $\rho $ es suprayectiva ( ¿$[AUB] = A \oplus B $?)
+\end{enumerate}
+
+\begin{definicion}[Suma interna directa ]
+    Si $U$ y $W$ son s.v. de $\bb V$ con $U\oplus W = \evV$, decimos que $\bb V $ es \textit{suma interna directa} de $U$ y $V$
+
+\end{definicion}
+
+\begin{definicion}[Sucesión (cadena)]
+Si $U,V,W$ son \kev y $\rho:U\rightarrow V $,$\gamma: V  \rightarrow W $ son transformaciones lineales, entonces denominamos como una \textit{sucesión(cadena)} a :
+$$U \xrightarrow{ \; \rho \;  } V \xrightarrow{\;\gamma\;} W$$ 
+\end{definicion}
+
+\begin{definicion}[Sucesión exacta]
+    Una sucesión 
+    $$U \xrightarrow{\;\alpha\;} V \xrightarrow{\; \gamma\;} W$$
+    es exacta en $V$ sí y sólo si $\im \alpha = \ker \gamma  $
+\end{definicion}
+
+\begin{problema}
+    Si $T:U \longrightarrow V$ es transformación lineal, ¿es exacta en $U$ $\{\cero \} \xrightarrow{Id} U \xrightarrow{T} V$ ?
+\end{problema}
+Solución:
+
+Para que la cadena sea exacta, debe ser que $ \im \id  = \{\cero\} = \ker T $, i.e. T tiene que ser un monomorfismo.
+
+\begin{definicion}[sucesión separante, separante]
+    Si  $\{\cero \} \xrightarrow {\;\;} U \xrightarrow{\;\alpha\;} V \xrightarrow{ \;\gamma\;} W \xrightarrow{\;\;} \{ \cero \}$ es una sucesión exacta (en $U,V$ y en $W$), diremos que se \textbf{separa} si existe $\beta : W \longrightarrow V$ lineal ,llamada \textbf{separante(descomposición)} tal que $\gamma \circ \beta = \id_W$
+\end{definicion}
+
+\begin{teorema}
+    Si $U,V$ y $W$ son espacios vectoriales de dimensión finita y  $\{\cero \} \xrightarrow {\;\;} U \xrightarrow{\;\alpha\;} V \xrightarrow{ \;\gamma\;} W \xrightarrow{\;\;} \{ \cero \}$ es exacta y $ \beta: W \longrightarrow V$ descomposición, entonces
+    $$V = \alpha (U) \oplus \beta (W)$$
+\end{teorema}
+\begin{proof}
+    Como la secuencia es exacta, podemos afirmar que :
+    \begin{align}
+        &\{\cero\}= \ker \alpha  \\
+        &\im \alpha = \ker \gamma\\
+        &\im \gamma = W
+    \end{align}
+    por el teorema \ref{rango-nulidad} de rango-nulidad y (1) podemos ver que $\dim U = 0 + \dim \im alpha $, i.e $ \dim U = \dim \im \alpha $, pero (2) implica que $\dim \im \alpha = \dim \ker \gamma $.
+    Como $\beta$ separa a $V$, $\gamma  \circ \beta = \id_W $, por el teoremita \todo{hacer referencia explicita}:
+    \begin{align}
+        &\text {$\gamma$ es epimorfismo} \Rightarrow \im \gamma = \cod \gamma = W \Rightarrow \dim \im \gamma = \dim W\\
+        &\text {$\beta$ es monomorfismo} \Rightarrow \ker \beta = \{ \cero_W \} \text{pero \ref{rango-nulidad}} \Rightarrow \dim W = \dim \im \beta 
+    \end{align}
+    por transitividad en (4) y (5): $dim \im \gamma = \dim \im \beta $.
+    Nuevamente aplicando el teorema de rango nulidad sobre $V$:
+    \begin{align*}
+        &\dim V = \dim \im \gamma + \dim \ker \gamma\\
+        &\dim V = \dim \im \beta + \dim \im \alpha 
+    \end{align*}
+    por el teorema \ref{dim sum e.v.} $\dim \im \alpha \cap \im \beta = 0$, esto implica que $\im \alpha \cap \im \beta = \{\cero_W\}$.
+
+    El teorema \ref{sumdir sii cap cero} nos dice que $V=\im \alpha \oplus \im \beta$, por definición de imagen:
+    $$V = \alpha(U)\oplus \beta (W)$$
+\end{proof}
+
+\begin{teorema}
+    Si $\dim U,dim V, dim W \in \bb N \cup \{\cero\}$ entonces si $\{\cero \} \xrightarrow {\;\;} U \xrightarrow{\;\alpha\;} V \xrightarrow{ \;\gamma\;} W \xrightarrow{\;\;} \{ \cero \}$ es exacta, también se descompone.
+\end{teorema}
+
+\begin{proof}
+    Busquemos una transformación $\beta: W \longrightarrow V $ tal que 
+    $$\gamma \circ \beta = \id_W $$
+    Primero, veamos que por hipótesis de exactitud:
+    \begin{align*}
+        &\{\cero\} = \ker \alpha\\
+        &\im \alpha = \ker \gamma\\
+        &\im \gamma = W
+    \end{align*}
+    En primera instancia, podemos afirmar que W es un epimorfismo, por lo tanto, si $\{w_1,w_2,w_3,\ldots, w_m\}$ es base de W, como $\gamma$ es sobre : $ \gamma^{-1}(w) \neq  \varnothing \: \forall w \in W$. Así pues, escojamos un $y_i$ fijo tal que $y_i \in \gamma^{-1} \forall i \in \overline{1,m}$, notemos que $\langle \{ y_i \}_i^m \rangle = V$.
+
+    Sea:
+    $$\beta: W \longrightarrow V $$
+    $$w = \sum_{i=1}^m a_i w_i \longmapsto \sum_{i=1}^{m} a_i y_i $$
+    La forma en que hemos escogido las $y_i$s nos garantiza que es una función bien definida, además es fácil demostrar que es una transformación lineal.
+
+    Ahora demostremos que $\gamma \circ \beta = \id_W$.
+    $\gamma(\beta(\sum_{i=1}^{m} a_i \gamma( \beta ( w_i))= \sum_{i=1}^{m} a_i \gamma(y_i) = \sum_{i=1}^{m} (w_i)$
+    esto es $\gamma(\beta(w))=w$ para todo $w\in W$, osea $\gamma \circ \beta = \id_W$. Por lo tanto, hemos demostrado que existe una separante, por lo tanto la cadena se separa.
+    
+\end{proof}
+
+\begin{teorema}[El conjunto cociente es un espacio vectorial]
+    Si $W$ s.v. de $\evV$ entonces $V/W$ es espacio vectorial con 
+    \begin{align*}
+        +:&V/W \times V/W \longrightarrow V/W\\
+        &([u],[v]])\longmapsto [u]+[v] = [u+v]\\
+        \text{y}\\
+        \forall k \in \kampo : k[u]=[ku]
+    \end{align*}
+        
+\end{teorema}
+\begin{proof}
+    Antes que nada, verifiquemos que las operaciones está bien definidas
+    \todo{capturar esta parte}\\
+    Ahora veamos que $V/W$ es de hecho un espacio vectorial.
+    Supongamos que $\bar a,\bar b ,\bar c \in V/W $ y $\alpha,\beta \in \kampo$
+    \begin{enumerate}
+        \item $[a] + [b] = [ b] + [ a]$\\
+            Por definición $[a] + [ b ]= [a+b]$, pero $a+b = b+a $ pues $b$ y $a$ pertenecen a $V$ y este es un espacio vectorial. por lo tanto  
+            \begin{align*}
+            [a+b] &= [b+a] \\
+            &= [b] + [a] 
+            \end{align*}
+            esto es $[a]+[b]=[b]+[a]$
+        \item $(\bar a + \bar b) + \bar c = \bar a + ( \bar b + \bar c)$\\
+        
+    \end{enumerate}
+\end{proof}
+Usually the template you're using will have the page margins and paper size set correctly for that use-case. For example, if you're using a journal article template provided by the journal publisher, that template will be formatted according to their requirements. In these cases, it's best not to alter the margins directly.
+
+If however you're using a more general template, such as this one, and would like to alter the margins, a common way to do so is via the geometry package. You can find the geometry package loaded in the preamble at the top of this example file, and if you'd like to learn more about how to adjust the settings, please visit this help article on \href{https://www.overleaf.com/learn/latex/page_size_and_margins}{page size and margins}.
+
+\subsection{How to change the document language and spell check settings}
+
+Overleaf supports many different languages, including multiple different languages within one document. 
+
+To configure the document language, simply edit the option provided to the babel package in the preamble at the top of this example project. To learn more about the different options, please visit this help article on \href{https://www.overleaf.com/learn/latex/International_language_support}{international language support}.
+
+To change the spell check language, simply open the Overleaf menu at the top left of the editor window, scroll down to the spell check setting, and adjust accordingly.
+
+\subsection{How to add Citations and a References List}
+
+You can simply upload a \verb|.bib| file containing your BibTeX entries, created with a tool such as JabRef. You can then cite entries from it, like this: \cite{greenwade93}. Just remember to specify a bibliography style, as well as the filename of the \verb|.bib|. You can find a \href{https://www.overleaf.com/help/97-how-to-include-a-bibliography-using-bibtex}{video tutorial here} to learn more about BibTeX.
+
+If you have an \href{https://www.overleaf.com/user/subscription/plans}{upgraded account}, you can also import your Mendeley or Zotero library directly as a \verb|.bib| file, via the upload menu in the file-tree.
+
+\subsection{Good luck!}
+
+We hope you find Overleaf useful, and do take a look at our \href{https://www.overleaf.com/learn}{help library} for more tutorials and user guides! Please also let us know if you have any feedback using the Contact Us link at the bottom of the Overleaf menu --- or use the contact form at \url{https://www.overleaf.com/contact}.
+
+\section{ n}
+
+\bibliographystyle{alpha}
+\bibliography{sample}
+
+\end{document}
